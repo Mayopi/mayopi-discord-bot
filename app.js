@@ -3,16 +3,14 @@ const start = performance.now();
 require("dotenv").config();
 const { Client, GatewayIntentBits, Events, Collection, EmbedBuilder, Partials } = require("discord.js");
 const mongoose = require("mongoose");
-const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
-const tf = require("@tensorflow/tfjs");
-const bcrypt = require("bcrypt");
+const { getVoiceConnection } = require("@discordjs/voice");
+
 const axios = require("axios");
 
 const fs = require("node:fs");
 const path = require("node:path");
 
 const { Config } = require("./models/Configuration");
-const { Polling } = require("./models/Polling");
 
 const { sendImage } = require("./commands/image");
 const { regression } = require("./commands/regression");
