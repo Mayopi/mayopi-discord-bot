@@ -4,8 +4,6 @@ const { EmbedBuilder, PermissionsBitField } = require("discord.js");
 const { Polling } = require("../models/Polling");
 
 const checkPolling = (polling, interaction, userID) => {
-  console.log(polling);
-
   if (polling.agree.participant.some((participant) => participant.userID === userID)) {
     interaction.reply(`${interaction.user.username} sudah review dan hanya bisa dilakukan satu kali untuk setiap user`);
     return false;

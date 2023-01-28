@@ -106,7 +106,7 @@ const pollingSchema = new mongoose.Schema({
 
     expired: {
       type: String,
-      default: Date.now() + 24 * 60 * 60 * 1000,
+      default: () => Date.now() + 24 * 60 * 60 * 1000,
     },
   },
 
