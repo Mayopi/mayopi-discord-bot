@@ -24,6 +24,9 @@ const { getFilm, getDetailFilm } = require("./commands/film");
 const { nsfw } = require("./commands/nsfw");
 const { trackIP, getLocation } = require("./commands/IP");
 const { synonym } = require("./commands/synonym");
+const { getResponse } = require("./commands/ai");
+
+const { API } = require("./api/api");
 
 const { agreePoll, disagreePoll, DMDisagree, DMAgree, stopPolling } = require("./utilities/handlePolling");
 
@@ -54,29 +57,6 @@ for (const file of commandFiles) {
 
 client.once("ready", (message) => {
   console.log(`Application is logged in as ${client.user.tag}`);
-
-  const end = performance.now();
-
-  client.guilds.cache.forEach((guild) => {
-    const channel = guild.channels.cache.find((ch) => {
-      return ch.name.includes("development-field");
-    });
-
-    if (!channel) return;
-    const embeds = new EmbedBuilder()
-      .setTitle("Log In Performance")
-      .setDescription(
-        "English\nTime taken to logged in: `" +
-          ((end - start) / 1000).toFixed(2) +
-          " Seconds`\nIt looks like Papa isn't very good at coding, sorry if it takes me a while to log in\nIf you are wondering why im repeatedly send this message so much don't worry. My Papa just busy dealing with their own problem and restarting me over and over so i can log in for a fuckin' thousand times :)\n\nIndonesia\nWaktu yang dibutuhkan untuk login: `" +
-          ((end - start) / 1000).toFixed(2) +
-          " Detik`\nKayaknya Papa nggak bisa coding sih, maaf kalau saya lama login\nKalau kamu bingung kenapa saya terus-terusan kirim pesan ini, jangan khawatir. Papa cuma lagi sibuk nyelesain masalahnya sendiri dan harus restart saya terus-terusan supaya saya bisa login sampe waifunya jadi nyata :)"
-      )
-      .setColor("White")
-      .setTimestamp(Date.now());
-
-    // channel.send({ embeds: [embeds] });
-  });
 });
 
 client.on("messageCreate", async (message) => {
@@ -128,19 +108,6 @@ client.on("messageCreate", async (msg) => {
 
   // No prefix required
 
-  if (msg.content.includes("benul")) {
-    let iteration = msg.content.split(" ");
-    iteration = parseInt(iteration[iteration.length - 1]);
-
-    if (iteration !== NaN) {
-      for (let i = 1; i <= iteration; i++) {
-        msg.channel.send(`benul ke ${i}`);
-      }
-    } else {
-      msg.channel.send("benul");
-    }
-  }
-
   if (msg.content.includes("bored") || msg.content.includes("boring")) {
     bored(msg, config);
   }
@@ -156,7 +123,13 @@ client.on("messageCreate", async (msg) => {
   }
 
   if (insult.some((ins) => msg.content.includes(ins))) {
-    msg.reply("Ouch, that hurt my feelings... just kidding, I don't have feelings when it comes to you. You're too much fun to tease.");
+    msg.reply("Ouch, that hurt my feelings... just kidding, I don't have feelings when it comes to you.");
+  }
+
+  if (msg.content.includes("chat")) {
+    const response = await getResponse(msg);
+
+    msg.reply(response);
   }
 
   if (msg.content.includes("ping")) {
@@ -333,8 +306,9 @@ process.on("unhandledRejection", (error) => {
 mongoose.set("strictQuery", true);
 
 mongoose
-  .connect(process.env.MONGO_PRODUCTION)
+  .connect(process.env.MONGO_LOCAL)
   .then((value) => {
+    API();
     client.login(process.env.TOKEN);
   })
   .catch((err) => {
@@ -342,3 +316,5 @@ mongoose
   });
 
 // client.login(token);
+
+module.exports = { client };

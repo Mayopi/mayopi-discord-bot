@@ -138,7 +138,7 @@ const agreePoll = async (interaction, client) => {
 
   client.users.fetch(userID).then((user) => {
     user.createDM().then((dm) => {
-      dm.send("**WARNING REVIEW INI HANYA BISA DILAKUKAN SATU KALI UNTUK SETIAP USER**\n> apakah <@" + userID + "> sudah yakin memilih `Kalem`?\n\nketik\n```yes review kalem " + token + "```untuk melanjutkan");
+      dm.send("**WARNING REVIEW INI HANYA BISA DILAKUKAN SATU KALI UNTUK SETIAP USER**\napakah <@" + userID + "> sudah yakin memilih `Kalem`?\n\nketik\n```yes review kalem " + token + "```untuk melanjutkan");
     });
   });
 };
